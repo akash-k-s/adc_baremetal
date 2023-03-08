@@ -1,0 +1,5 @@
+../Src/main.c:7:6:clock_init	4	static
+../Src/main.c:55:6:pa0_adc_init	4	static
+../Src/main.c:94:6:start_conversion	4	static
+../Src/main.c:99:10:adc_read	4	static
+../Src/main.c:117:5:main	16	static
