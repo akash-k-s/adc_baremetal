@@ -8,8 +8,10 @@ void clock_init(void){
 	//RCC->CR|=RCC_CR_HSI48ON;
 		//hse on and wait for it to satabilize;
 		//hse 24mhz;
+
 		RCC->CR|=RCC_CR_HSEON; //
-		while (!(RCC->CR & (1<<17)));
+		while (!(RCC->CR & (1<<17))){
+		}
 
 		//pll mux  hse clock is selected.
 		RCC->PLLCKSELR|=(2ul<<0);
@@ -34,11 +36,15 @@ void clock_init(void){
 		//RCC->SRDCCIPR|=(2ul<<16);
 
 		RCC->CR|=RCC_CR_PLL1ON;
-		while (!(RCC->CR & (1<<25)));
+		while (!(RCC->CR & (1<<25))){
+		}
 
 		RCC->CR|=RCC_CR_PLL2ON;
-		while(!(RCC->CR&(1<<27)));
-		while(!(RCC->CR&(1<<14)));
+		while(!(RCC->CR&(1<<27))){
+		}
+
+		while(!(RCC->CR&(1<<14))){
+		}
 
 		//while(!(RCC->CR&(1<<15))){
 			//x=5;
@@ -77,7 +83,7 @@ void pa0_adc_init(void){
 	ADC1->PCSEL|=ADC_PCSEL_PCSEL_16;
 	ADC1->CFGR&=~(5UL<<2);// 16 BIT MODE
 	//ADC1->CFGR|=(5ul<<2);
-	//ADC1->SMPR2|=(5UL<<18);//SAMPLING 810.5 ADC CYCLES
+	ADC1->SMPR1|=(5UL<<18);//SAMPLING 810.5 ADC CYCLES
 
 	//ADC12_COMMON->CCR|=(ADC_CCR_CKMODE_0|ADC_CCR_CKMODE_1); // adc_sclk/4 (Synchronous clock mode)
 	ADC1->DIFSEL&=~ADC_DIFSEL_DIFSEL_16;// single channel adc
@@ -86,7 +92,6 @@ void pa0_adc_init(void){
 
 	//ovsr=1024 ovss[3:0]=1010
 }
-
 void start_conversion(void){
 	/*start adc conversion*/
 	ADC1->CR|=ADC_CR_ADSTART;
@@ -109,17 +114,23 @@ uint32_t adc_read(void){
 
 
 uint32_t sensor_value;
-
+int data;
 int main(void){
-	x=0;
+	data=0;
 	clock_init();
-	x=10;
+	data=1;
 	pa0_adc_init();
-	x=15;
+	data=2;
+	//calibrate the adc
+	//timer init for adc start with interup routine
+	//dma of two blocks
+	//fft of the first address
 	while(1){
 		start_conversion();
+		data=3;
 		sensor_value=adc_read();
-		for(int i=0;i<1000000;i++){
+		data=4;
+		for(int i=0;i<100;i++){
 		}
 		//sensor_value=sensor_value>>12;
 	}
